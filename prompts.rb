@@ -8,7 +8,11 @@ require_relative "./pieces/rook.rb"
 require_relative "Notation_Conversion.rb"
 
 class Prompts
-include Notation_Conversion
+  include Notation_Conversion
+
+  def initialize
+  end
+
   #initiates a prompt to the player and returns the piece that player selected
   #reinitiates prompt if input invalid
   def get_selection(color, board)
@@ -20,24 +24,16 @@ include Notation_Conversion
       end
       if !board[selection[0]][selection[1]].nil? && board[selection[0]][selection[1]].color == color
         return board[selection[0]][selection[1]]
+        break
       end
       puts "Invalid selection! Please try again."
     end
   end
-
-  
-
-  def get_move_to(piece_class, board)
+#unfinished
+  def get_move_to(piece, board)
     loop do
       puts "Move to:"
       selection = get_indices_from_notation(gets.chomp)
-
     end
   end
 end
-
-board = Board.new
-board.new_board
-prompt = Prompts.new
-p prompt.get_selection("white", board.board)
-

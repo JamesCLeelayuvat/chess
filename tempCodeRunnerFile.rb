@@ -1,3 +1,1 @@
-board = Board.new
-board.new_board
-board.display_board(board.board)
+require_relative "Notation_Conversion.rb"
