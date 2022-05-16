@@ -178,6 +178,10 @@ class Checking_Movements
     end
     valid_moves
   end
+
+  def valid_moves_array_queen(piece, board)
+    return valid_moves_array_rook(piece, board) + valid_moves_array_bishop(piece, board)
+  end
 end
 
 board = Board.new
@@ -185,4 +189,4 @@ board.new_board
 board.display_board(board.board)
 prompts = Prompts.new
 cm = Checking_Movements.new
-p cm.valid_moves_array_bishop(prompts.get_selection("white", board.board), board.board)
+p cm.valid_moves_array_queen(prompts.get_selection("white", board.board), board.board)
