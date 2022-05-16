@@ -1,4 +1,5 @@
 module Notation_Conversion
+#converts algebraic notation into indices
   def get_indices_from_notation(selection)
     index_array = [0, 1, 2, 3, 4, 5, 6, 7]
     alphabet_array = ["a", "b", "c", "d", "e", "f", "g", "h"]

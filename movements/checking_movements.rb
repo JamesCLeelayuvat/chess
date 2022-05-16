@@ -182,6 +182,13 @@ class Checking_Movements
   def valid_moves_array_queen(piece, board)
     return valid_moves_array_rook(piece, board) + valid_moves_array_bishop(piece, board)
   end
+
+  def valid_moves_array_king(piece, board)
+  
+  end
+
+  def valid_moves_array(piece, board)
+  end
 end
 
 board = Board.new
