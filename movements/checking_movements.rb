@@ -122,61 +122,62 @@ class Checking_Movements
   end
 
   def valid_moves_array_bishop(piece, board)
-  valid_moves = []
+    valid_moves = []
     column = piece.column
     row = piece.row
     #checking ascending right
     i = 1
-    while row + i <= 7
-      if !board[column][row + i].nil? && board[column][row + i].color == piece.color
+    while column + i <= 7 && row + i <= 7
+      if !board[column + i][row + i].nil? && board[column + i][row + i].color == piece.color
         break
-      elsif !board[column][row + i].nil? && board[column][row + i].color != piece.color
-        valid_moves.append([column, row + i])
+      elsif !board[column + i][row + i].nil? && board[column + i][row + i].color != piece.color
+        valid_moves.append([column + i, row + i])
         break
       else
-        valid_moves.append([column, row + i])
+        valid_moves.append([column + i, row + i])
         i += 1
       end
     end
     #checking descending right
     i = 1
-    while row - i >= 0
-      if !board[column][row - i].nil? && board[column][row - i].color == piece.color
+    while column + i <= 7 && row - i >= 0
+      if !board[column + i][row - i].nil? && board[column + i][row - i].color == piece.color
         break
-      elsif !board[column][row - i].nil? && board[column][row - i].color != piece.color
-        valid_moves.append([column, row - i])
+      elsif !board[column + i][row - i].nil? && board[column + i][row - i].color != piece.color
+        valid_moves.append([column + i, row - i])
         break
       else
-        valid_moves.append([column, row - i])
+        valid_moves.append([column + i, row - i])
         i += 1
       end
     end
     #checking ascending left
     i = 1
-    while column - i >= 0
-      if !board[column - i][row].nil? && board[column - i][row].color == piece.color
+    while column - i >= 0 && row + i <= 7
+      if !board[column - i][row + i].nil? && board[column - i][row + i].color == piece.color
         break
-      elsif !board[column - i][row].nil? && board[column - i][row].color != piece.color
-        valid_moves.append([column - i, row])
+      elsif !board[column - i][row + i].nil? && board[column - i][row + i].color != piece.color
+        valid_moves.append([column - i, row + i])
         break
       else
-        valid_moves.append([column - i, row])
+        valid_moves.append([column - i, row + i])
         i += 1
       end
     end
     #checking descending left
-    while column + i >= 0
-      if !board[column + i][row].nil? && board[column + i][row].color == piece.color
+    while column - i >= 0 && row - i >= 0
+      if !board[column - i][row - i].nil? && board[column - i][row - i].color == piece.color
         break
-      elsif !board[column + i][row].nil? && board[column + i][row].color != piece.color
-        valid_moves.append([column + i, row])
+      elsif !board[column - i][row - i].nil? && board[column - i][row - i].color != piece.color
+        valid_moves.append([column - i, row - i])
         break
       else
-        valid_moves.append([column + i, row])
+        valid_moves.append([column - i, row - i])
         i += 1
       end
     end
     valid_moves
+  end
 end
 
 board = Board.new
@@ -184,4 +185,4 @@ board.new_board
 board.display_board(board.board)
 prompts = Prompts.new
 cm = Checking_Movements.new
-p cm.valid_moves_array_rook(prompts.get_selection("white", board.board), board.board)
+p cm.valid_moves_array_bishop(prompts.get_selection("white", board.board), board.board)
