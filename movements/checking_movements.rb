@@ -183,11 +183,57 @@ class Checking_Movements
     return valid_moves_array_rook(piece, board) + valid_moves_array_bishop(piece, board)
   end
 
-  def valid_moves_array_king(piece, board)
-  
+  #returns array of valid moves for king
+  def valid_moves_array_king(piece, board, board_class)
+    valid_moves_array = []
+    #find the opposite color and grab list of pieces
+    if piece.color == "white"
+      opponent_pieces_array = board_class.white_pieces
+    else
+      opponent_pieces_array = board_class.black_pieces
+    end
+    danger_squares = []
+    opponent_pieces_array.each { |piece|
+      #append all moves by opponent to danger list
+      if piece.captured == false
+        if piece.instance_of? Pawn
+          if piece.column + 1 <= 7 && piece.row + 1 <= 7
+            danger_squares.append([piece.column + 1, piece.row + 1])
+          end
+          if piece.column - 1 >= 0 && piece.row + 1 >= 0
+            danger_squares.append([piece.column - 1, piece.row + 1])
+          end
+        else
+          danger_squares += valid_moves_array(piece, board, board_class) unless valid_moves_array(piece, board, board_class).nil?
+        end
+      end
+    }
+    danger_squares.uniq!
+    #checks all squares around king, adds to array of valid moves only if the square is not dangerous and no ally pieces are on the square
+    for i in -1..1
+      for j in -1..1
+        if !danger_squares.include? [piece.column + i, piece.row + j] && (board.board[piece.column + i][piece.row + j].nil?) || board.board[piece.column + i][piece.row + j].color != piece.color
+          valid_moves_array.append([piece.column + i, piece.row + j])
+        end
+      end
+    end
   end
 
-  def valid_moves_array(piece, board)
+  def valid_moves_array(piece, board, board_class)
+    case piece.class
+    when Bishop
+      return valid_moves_array_bishop(piece, board)
+    when Pawn
+      return valid_moves_array_pawn(piece, board)
+    when Rook
+      return valid_moves_array_rook(piece, board)
+    when Knight
+      return valid_moves_array_knight(piece, board)
+    when King
+      return valid_moves_array_king(piece, board, board_class)
+    when Queen
+      return valid_moves_array_queen(piece, board)
+    end
   end
 end
 
@@ -196,4 +242,4 @@ board.new_board
 board.display_board(board.board)
 prompts = Prompts.new
 cm = Checking_Movements.new
-p cm.valid_moves_array_queen(prompts.get_selection("white", board.board), board.board)
+p cm.valid_moves_array_king(prompts.get_selection("white", board.board), board.board, board)

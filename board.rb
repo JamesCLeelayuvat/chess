@@ -7,12 +7,14 @@ require_relative "./pieces/rook.rb"
 
 module Displayable
   private
+
   #print the top coordinates
   def print_top_coordinates
     puts "\e[0;33m a b c d e f g h\e[0m"
   end
 
   public
+
   #returns the board rendered in unicode
   def display_board(board)
     print_top_coordinates
@@ -42,6 +44,7 @@ module Displayable
       return ";30"
     end
   end
+
   #input a class, returns the unicode symbol
   def get_symbol_from_class(piece_class)
     case
@@ -77,9 +80,11 @@ end
 
 class Board
   include Displayable
-  attr_accessor :board
+  attr_accessor :board, :white_pieces, :black_pieces
 
   def initialize
+    @white_pieces = []
+    @black_pieces = []
     @board = [[nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil],
@@ -89,6 +94,7 @@ class Board
               [nil, nil, nil, nil, nil, nil, nil, nil],
               [nil, nil, nil, nil, nil, nil, nil, nil]]
   end
+
   # creating a new board
   def new_board
     #declaring the special white pieces
@@ -110,6 +116,11 @@ class Board
     @board[5][1] = Pawn.new("white", 5, 1)
     @board[6][1] = Pawn.new("white", 6, 1)
     @board[7][1] = Pawn.new("white", 7, 1)
+    #creating a list of all white pieces
+    @board.each_with_index { |v, i|
+      @white_pieces.append(@board[i][0])
+      @white_pieces.append(@board[i][1])
+    }
 
     #declaring the special black pieces
     @board[0][7] = Rook.new("black", 0, 7)
@@ -130,5 +141,15 @@ class Board
     @board[5][6] = Pawn.new("black", 5, 6)
     @board[6][6] = Pawn.new("black", 6, 6)
     @board[7][6] = Pawn.new("black", 7, 6)
+    #creating a list of all black pieces
+    @board.each_with_index { |v, i|
+      @black_pieces.append(@board[i][6])
+      @black_pieces.append(@board[i][7])
+    }
   end
 end
+
+board = Board.new
+board.new_board
+puts board.black_pieces
+puts board.white_pieces
