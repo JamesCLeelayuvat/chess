@@ -21,11 +21,20 @@ class Checking_Movements
       valid_moves.append([column, row + 1])
     end
     #check for captures
-    if row + 1 <= 7 && column + 1 <= 7 && !board[column + 1][row + 1].nil? && board[column + 1][row + 1].color != piece.color
-      valid_moves.append([column + 1, row + 1])
-    end
-    if row + 1 <= 7 && column - 1 >= 0 && !board[column - 1][row + 1].nil? && board[column - 1][row + 1].color != piece.color
-      valid_moves.append([column - 1, row + 1])
+    if piece.color == "white"
+      if row + 1 <= 7 && column + 1 <= 7 && !board[column + 1][row + 1].nil? && board[column + 1][row + 1].color != piece.color
+        valid_moves.append([column + 1, row + 1])
+      end
+      if row + 1 <= 7 && column - 1 >= 0 && !board[column - 1][row + 1].nil? && board[column - 1][row + 1].color != piece.color
+        valid_moves.append([column - 1, row + 1])
+      end
+    else
+      if row - 1 >= 0 && column + 1 <= 7 && !board[column + 1][row - +1].nil? && board[column + 1][row - 1].color != piece.color
+        valid_moves.append([column + 1, row + 1])
+      end
+      if row - 1 >= 0 && column - 1 >= 0 && !board[column - 1][row - 1].nil? && board[column - 1][row - 1].color != piece.color
+        valid_moves.append([column - 1, row - 1])
+      end
     end
     valid_moves
   end
@@ -185,25 +194,38 @@ class Checking_Movements
 
   #returns array of valid moves for king
   def valid_moves_array_king(piece, board, board_class)
-    valid_moves_array = []
+    valid_moves = []
     #find the opposite color and grab list of pieces
     if piece.color == "white"
-      opponent_pieces_array = board_class.white_pieces
-    else
       opponent_pieces_array = board_class.black_pieces
+    else
+      opponent_pieces_array = board_class.white_pieces
     end
     danger_squares = []
     opponent_pieces_array.each { |piece|
       #append all moves by opponent to danger list
       if piece.captured == false
         if piece.instance_of? Pawn
-          if piece.column + 1 <= 7 && piece.row + 1 <= 7
-            danger_squares.append([piece.column + 1, piece.row + 1])
-          end
-          if piece.column - 1 >= 0 && piece.row + 1 >= 0
-            danger_squares.append([piece.column - 1, piece.row + 1])
+          if piece.color == "white"
+            if piece.column + 1 <= 7 && piece.row + 1 <= 7
+              danger_squares.append([piece.column + 1, piece.row + 1])
+            end
+            if piece.column - 1 >= 0 && piece.row + 1 >= 0
+              danger_squares.append([piece.column - 1, piece.row + 1])
+            end
+          else
+            if piece.column + 1 <= 7 && piece.row - 1 >= 0
+              danger_squares.append([piece.column + 1, piece.row - 1])
+            end
+            if piece.column - 1 >= 0 && piece.row - 1 >= 0
+              danger_squares.append([piece.column - 1, piece.row - 1])
+            end
           end
         else
+          if piece.instance_of? Rook
+            p piece
+            p valid_moves_array(piece, board, board_class)
+          end
           danger_squares += valid_moves_array(piece, board, board_class) unless valid_moves_array(piece, board, board_class).nil?
         end
       end
@@ -212,13 +234,15 @@ class Checking_Movements
     #checks all squares around king, adds to array of valid moves only if the square is not dangerous and no ally pieces are on the square
     for i in -1..1
       for j in -1..1
-        if !danger_squares.include? [piece.column + i, piece.row + j] && (board.board[piece.column + i][piece.row + j].nil?) || board.board[piece.column + i][piece.row + j].color != piece.color
-          valid_moves_array.append([piece.column + i, piece.row + j])
+        if !danger_squares.include?([piece.column + i, piece.row + j]) && (piece.column + i).between?(0, 7) && (piece.row + j).between?(0, 7) && (board[piece.column + i][piece.row + j].nil? || board[piece.column + i][piece.row + j].color != piece.color)
+          valid_moves.append([piece.column + i, piece.row + j])
         end
       end
     end
+    valid_moves
   end
 
+  #valid moves for all pieces
   def valid_moves_array(piece, board, board_class)
     case piece.class
     when Bishop

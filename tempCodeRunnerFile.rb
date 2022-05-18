@@ -1,1 +1,2 @@
-require_relative "Notation_Conversion.rb"
+    # @black_pieces.append(@board[2][1])
+
