@@ -82,10 +82,12 @@ class Checking_Movements
       if !board[column][row + i].nil? && board[column][row + i].color == piece.color
         break
       elsif !board[column][row + i].nil? && board[column][row + i].color != piece.color
+        p "hello1"
         valid_moves.append([column, row + i])
         break
       else
         valid_moves.append([column, row + i])
+        p "hello2"
         i += 1
       end
     end
@@ -96,9 +98,11 @@ class Checking_Movements
         break
       elsif !board[column][row - i].nil? && board[column][row - i].color != piece.color
         valid_moves.append([column, row - i])
+        p "hello3"
         break
       else
         valid_moves.append([column, row - i])
+        p "hello4"
         i += 1
       end
     end
@@ -109,21 +113,28 @@ class Checking_Movements
         break
       elsif !board[column - i][row].nil? && board[column - i][row].color != piece.color
         valid_moves.append([column - i, row])
+        p "hello5"
         break
       else
         valid_moves.append([column - i, row])
+        p "hello6"
         i += 1
       end
     end
     #checking horizontal right
+    p "hello"
     while column + i >= 0
+      p column
+      p i
       if !board[column + i][row].nil? && board[column + i][row].color == piece.color
         break
       elsif !board[column + i][row].nil? && board[column + i][row].color != piece.color
         valid_moves.append([column + i, row])
+        p "hello7"
         break
       else
         valid_moves.append([column + i, row])
+        p "hello7"
         i += 1
       end
     end
@@ -222,7 +233,7 @@ class Checking_Movements
             end
           end
         else
-          if piece.instance_of? Rook
+          if piece.instance_of?(Rook) && piece.column == 2
             p piece
             p valid_moves_array(piece, board, board_class)
           end
@@ -244,19 +255,19 @@ class Checking_Movements
 
   #valid moves for all pieces
   def valid_moves_array(piece, board, board_class)
-    case piece.class
-    when Bishop
-      return valid_moves_array_bishop(piece, board)
-    when Pawn
-      return valid_moves_array_pawn(piece, board)
-    when Rook
-      return valid_moves_array_rook(piece, board)
-    when Knight
-      return valid_moves_array_knight(piece, board)
-    when King
-      return valid_moves_array_king(piece, board, board_class)
-    when Queen
-      return valid_moves_array_queen(piece, board)
+    case
+    when piece.instance_of?(Bishop)
+      valid_moves_array_bishop(piece, board)
+    when piece.instance_of?(Pawn)
+      valid_moves_array_pawn(piece, board)
+    when piece.instance_of?(Rook)
+      valid_moves_array_rook(piece, board)
+    when piece.instance_of?(Knight)
+      valid_moves_array_knight(piece, board)
+    when piece.instance_of?(King)
+      valid_moves_array_king(piece, board, board_class)
+    when piece.instance_of?(Queen)
+      valid_moves_array_queen(piece, board)
     end
   end
 end
