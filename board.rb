@@ -110,9 +110,9 @@ class Board
     #declaring the white pawns
     @board[0][1] = Pawn.new("white", 0, 1)
     @board[1][1] = Pawn.new("white", 1, 1)
-    # @board[2][1] = Pawn.new("white", 2, 1)
-    # @board[3][1] = Pawn.new("white", 3, 1)
-    # @board[4][1] = Pawn.new("white", 4, 1)
+    @board[2][1] = Pawn.new("white", 2, 1)
+    @board[3][1] = Pawn.new("white", 3, 1)
+    @board[4][1] = Pawn.new("white", 4, 1)
     @board[5][1] = Pawn.new("white", 5, 1)
     @board[6][1] = Pawn.new("white", 6, 1)
     @board[7][1] = Pawn.new("white", 7, 1)
@@ -131,7 +131,6 @@ class Board
     @board[5][7] = Bishop.new("black", 5, 7)
     @board[6][7] = Knight.new("black", 6, 7)
     @board[7][7] = Rook.new("black", 7, 7)
-    @board[2][1] = Rook.new("black", 2, 1)
 
     #declaring the black pawns
     @board[0][6] = Pawn.new("black", 0, 6)
@@ -147,6 +146,5 @@ class Board
       @black_pieces.append(@board[i][6])
       @black_pieces.append(@board[i][7])
     }
-    @black_pieces.append(@board[2][1])
   end
 end
