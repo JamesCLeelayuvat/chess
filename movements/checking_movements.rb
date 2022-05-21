@@ -82,10 +82,12 @@ class Checking_Movements
       if !board[column][row + i].nil? && board[column][row + i].color == piece.color
         break
       elsif !board[column][row + i].nil? && board[column][row + i].color != piece.color
+        p "hello1"
         valid_moves.append([column, row + i])
         break
       else
         valid_moves.append([column, row + i])
+        p "hello2"
         i += 1
       end
     end
@@ -96,39 +98,47 @@ class Checking_Movements
         break
       elsif !board[column][row - i].nil? && board[column][row - i].color != piece.color
         valid_moves.append([column, row - i])
+        p "hello3"
         break
       else
         valid_moves.append([column, row - i])
+        p "hello4"
         i += 1
-        endF
       end
-      #checking horizontal left
-      i = 1
-      while column - i >= 0
-        if !board[column - i][row].nil? && board[column - i][row].color == piece.color
-          break
-        elsif !board[column - i][row].nil? && board[column - i][row].color != piece.color
-          valid_moves.append([column - i, row])
-          break
-        else
-          valid_moves.append([column - i, row])
-          i += 1
-        end
-      end
-      #checking horizontal right
-      while column + i >= 0
-        if !board[column + i][row].nil? && board[column + i][row].color == piece.color
-          break
-        elsif !board[column + i][row].nil? && board[column + i][row].color != piece.color
-          valid_moves.append([column + i, row])
-          break
-        else
-          valid_moves.append([column + i, row])
-          i += 1
-        end
-      end
-      valid_moves
     end
+    #checking horizontal left
+    i = 1
+    while column - i >= 0
+      if !board[column - i][row].nil? && board[column - i][row].color == piece.color
+        break
+      elsif !board[column - i][row].nil? && board[column - i][row].color != piece.color
+        valid_moves.append([column - i, row])
+        p "hello5"
+        break
+      else
+        valid_moves.append([column - i, row])
+        p "hello6"
+        i += 1
+      end
+    end
+    #checking horizontal right
+    p "hello"
+    while column + i >= 0
+      p column
+      p i
+      if !board[column + i][row].nil? && board[column + i][row].color == piece.color
+        break
+      elsif !board[column + i][row].nil? && board[column + i][row].color != piece.color
+        valid_moves.append([column + i, row])
+        p "hello7"
+        break
+      else
+        valid_moves.append([column + i, row])
+        p "hello7"
+        i += 1
+      end
+    end
+    valid_moves
   end
 
   def valid_moves_array_bishop(piece, board)
@@ -198,17 +208,14 @@ class Checking_Movements
     valid_moves = []
     #find the opposite color and grab list of pieces
     if piece.color == "white"
-      p "hello"
       opponent_pieces_array = board_class.black_pieces
     else
-      p "hi"
       opponent_pieces_array = board_class.white_pieces
     end
     danger_squares = []
-    opponent_pieces_array.each do |piece|
-      p piece
+    opponent_pieces_array.each { |piece|
       #append all moves by opponent to danger list
-      if piece.nil? == false && piece.captured == false
+      if piece.captured == false
         if piece.instance_of? Pawn
           if piece.color == "white"
             if piece.column + 1 <= 7 && piece.row + 1 <= 7
@@ -226,14 +233,14 @@ class Checking_Movements
             end
           end
         else
-          #checking
           if piece.instance_of?(Rook) && piece.column == 2
+            p piece
             p valid_moves_array(piece, board, board_class)
           end
           danger_squares += valid_moves_array(piece, board, board_class) unless valid_moves_array(piece, board, board_class).nil?
         end
       end
-    end
+    }
     danger_squares.uniq!
     #checks all squares around king, adds to array of valid moves only if the square is not dangerous and no ally pieces are on the square
     for i in -1..1
