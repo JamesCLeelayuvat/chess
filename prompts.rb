@@ -29,11 +29,18 @@ class Prompts
       puts "Invalid selection! Please try again."
     end
   end
-#unfinished
+
+  #unfinished
   def get_move_to(piece, board)
     loop do
       puts "Move to:"
       selection = get_indices_from_notation(gets.chomp)
     end
+  end
+
+  def get_focus_selection
+    puts "Select a piece:"
+    selection = get_indices_from_notation(gets.chomp)
+    selection
   end
 end
