@@ -9,11 +9,13 @@ class Focus
     @black_focus = nil
   end
 
+  #resetting focus
   def reset_focus
     @white_focus = nil
     @black_focus = nil
   end
 
+  #get the piece selection from the player
   def get_focus(color, board)
     valid_focus = false
     unless valid_focus
@@ -29,11 +31,3 @@ class Focus
     end
   end
 end
-
-board = Board.new
-board.new_board
-board.display_board(board.board)
-focus = Focus.new
-focus.get_focus("white", board.board)
-p focus.white_focus
-p focus.black_focus
