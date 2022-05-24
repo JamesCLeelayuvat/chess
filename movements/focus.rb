@@ -1,8 +1,10 @@
 require_relative "../prompts.rb"
 
 class Focus
+  attr_accessor :white_focus, :black_focus
+
   def initialize
-    prompts = Prompts.new
+    @prompts = Prompts.new
     @white_focus = nil
     @black_focus = nil
   end
@@ -15,7 +17,7 @@ class Focus
   def get_focus(color, board)
     valid_focus = false
     unless valid_focus
-      focus = prompts.get_focus_selection
+      focus = @prompts.get_focus_selection
       if board[focus[0]][focus[1]].color == color
         valid_focus = true
         if color == "white"
@@ -32,6 +34,6 @@ board = Board.new
 board.new_board
 board.display_board(board.board)
 focus = Focus.new
-focus.get_focus
+focus.get_focus("white", board.board)
 p focus.white_focus
 p focus.black_focus
