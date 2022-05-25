@@ -31,13 +31,13 @@ class Prompts
   end
 
   #unfinished
-  def get_move_to(piece, board)
-    loop do
-      puts "Move to:"
-      selection = get_indices_from_notation(gets.chomp)
-    end
+  def get_move_to_selection
+    puts "Move to:"
+    selection = get_indices_from_notation(gets.chomp)
+    selection
   end
 
+  #select a piece
   def get_focus_selection
     puts "Select a piece:"
     selection = get_indices_from_notation(gets.chomp)

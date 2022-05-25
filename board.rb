@@ -95,6 +95,10 @@ class Board
               [nil, nil, nil, nil, nil, nil, nil, nil]]
   end
 
+  def self
+    self
+  end
+
   # creating a new board
   def new_board
     #declaring the special white pieces
