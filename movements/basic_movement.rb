@@ -30,7 +30,7 @@ class Basic_Movement
     end
     #move the piece
     board[move[0]][move[1]] = focus_piece
-    board[focus_piece.column][focus_piece.row] == nil
+    board[focus_piece.column][focus_piece.row] = nil
     focus_piece.column = move[0]
     focus_piece.row = move[1]
   end

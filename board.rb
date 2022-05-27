@@ -135,6 +135,8 @@ class Board
     @board[5][7] = Bishop.new("black", 5, 7)
     @board[6][7] = Knight.new("black", 6, 7)
     @board[7][7] = Rook.new("black", 7, 7)
+    @board[3][5] = Rook.new("black", 3, 5) #temp
+    @black_pieces.append(@board[3][5]) #temp
 
     #declaring the black pawns
     @board[0][6] = Pawn.new("black", 0, 6)

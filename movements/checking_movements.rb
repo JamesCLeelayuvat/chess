@@ -1,6 +1,8 @@
 require_relative "../Notation_Conversion.rb"
 require_relative "../board.rb"
 require_relative "../prompts.rb"
+require_relative "focus.rb"
+require_relative "../pieces/king.rb"
 
 class Checking_Movements
   include Notation_Conversion
@@ -292,15 +294,14 @@ class Checking_Movements
 
   def is_pinned?(move, color, focus, board)
     board_clone = Marshal.load(Marshal.dump(board.board))
-    #determine the piece to be focused on
+    #determine the piece to be focused on to move
     if color == "white"
       focus_piece = board_clone[focus.white_focus.column][focus.white_focus.row]
     else
       focus_piece = board_clone[focus.black_focus.column][focus.white_focus.row]
     end
     #moving the clone piece
-    board_clone[move[0]][move[1]] = focus_piece
-    board_clone[focus_piece.column][focus_piece.row] == nil
+    board_clone[focus_piece.column][focus_piece.row] = nil
     focus_piece.column = move[0]
     focus_piece.row = move[1]
     if color == "white"
@@ -309,6 +310,7 @@ class Checking_Movements
       king = board.black_pieces.select { |piece| piece.instance_of? King }
     end
     danger_squares_array = danger_squares(color, board_clone, board)
+    king = king[0]
     if danger_squares_array.include?([king.column, king.row])
       return true
     else
@@ -317,9 +319,11 @@ class Checking_Movements
   end
 end
 
-# board = Board.new
-# board.new_board
-# board.display_board(board.board)
-# prompts = Prompts.new
-# cm = Checking_Movements.new
-# p cm.valid_moves_array_king(prompts.get_selection("white", board.board), board.board, board)
+board = Board.new
+board.new_board
+board.display_board(board.board)
+prompts = Prompts.new
+cm = Checking_Movements.new
+focus = Focus.new
+focus.white_focus = board.board[3][1]
+p cm.is_pinned?([7, 7], "white", focus, board)
