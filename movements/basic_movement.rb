@@ -34,17 +34,4 @@ class Basic_Movement
     focus_piece.column = move[0]
     focus_piece.row = move[1]
   end
-
-  def check_pin(move, color, focus, board)
-  end
 end
-
-board = Board.new
-board.new_board
-board.display_board(board.board)
-focus = Focus.new
-focus.get_focus("white", board.board)
-prompts = Prompts.new
-bm = Basic_Movement.new
-bm.basic_move(prompts.get_move_to_selection(), "white", focus, board.board, board)
-board.display_board(board.board)

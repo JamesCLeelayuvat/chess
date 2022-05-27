@@ -255,6 +255,66 @@ class Checking_Movements
       valid_moves_array_queen(piece, board)
     end
   end
+
+  def danger_squares(color, board, board_class)
+    if color == "white"
+      opponent_pieces_array = board_class.black_pieces
+    else
+      opponent_pieces_array = board_class.white_pieces
+    end
+    danger_squares = []
+    opponent_pieces_array.each do |piece|
+      #append all moves by opponent to danger list
+      if !piece.nil? && piece.captured == false
+        if piece.instance_of? Pawn
+          if piece.color == "white"
+            if piece.column + 1 <= 7 && piece.row + 1 <= 7
+              danger_squares.append([piece.column + 1, piece.row + 1])
+            end
+            if piece.column - 1 >= 0 && piece.row + 1 >= 0
+              danger_squares.append([piece.column - 1, piece.row + 1])
+            end
+          else
+            if piece.column + 1 <= 7 && piece.row - 1 >= 0
+              danger_squares.append([piece.column + 1, piece.row - 1])
+            end
+            if piece.column - 1 >= 0 && piece.row - 1 >= 0
+              danger_squares.append([piece.column - 1, piece.row - 1])
+            end
+          end
+        elsif !piece.instance_of? King
+          danger_squares += valid_moves_array(piece, board, board_class) unless valid_moves_array(piece, board, board_class).nil?
+        end
+      end
+    end
+    danger_squares.uniq!
+  end
+
+  def is_pinned?(move, color, focus, board)
+    board_clone = Marshal.load(Marshal.dump(board.board))
+    #determine the piece to be focused on
+    if color == "white"
+      focus_piece = board_clone[focus.white_focus.column][focus.white_focus.row]
+    else
+      focus_piece = board_clone[focus.black_focus.column][focus.white_focus.row]
+    end
+    #moving the clone piece
+    board_clone[move[0]][move[1]] = focus_piece
+    board_clone[focus_piece.column][focus_piece.row] == nil
+    focus_piece.column = move[0]
+    focus_piece.row = move[1]
+    if color == "white"
+      king = board.white_pieces.select { |piece| piece.instance_of? King }
+    else
+      king = board.black_pieces.select { |piece| piece.instance_of? King }
+    end
+    danger_squares_array = danger_squares(color, board_clone, board)
+    if danger_squares_array.include?([king.column, king.row])
+      return true
+    else
+      return false
+    end
+  end
 end
 
 # board = Board.new
