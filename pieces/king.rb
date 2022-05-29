@@ -1,5 +1,5 @@
 class King
-  attr_accessor :color, :column, :row, :captured
+  attr_accessor :color, :column, :row, :captured, :has_moved
 
   def initialize(color, column, row)
     @captured = false
