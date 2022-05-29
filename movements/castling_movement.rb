@@ -63,6 +63,7 @@ class CastlingMovements
     rook_left = get_rooks(color, board_class)[0]
     if color == "white"
       board_class.board[0][0] = nil
+      board_class.board[4][0] = nil
       board_class.board[2][0] = king
       board_class.board[3][0] = rook_left
     else
@@ -88,10 +89,3 @@ class CastlingMovements
     end
   end
 end
-
-board = Board.new
-board.new_board
-board.display_board(board.board)
-cm = CastlingMovements.new
-p cm.can_castle_left?("white", board)
-p cm.can_castle_right?("white", board)
