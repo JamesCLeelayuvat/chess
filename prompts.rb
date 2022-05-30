@@ -43,4 +43,19 @@ class Prompts
     selection = get_indices_from_notation(gets.chomp)
     selection
   end
+
+  def get_promotion
+    puts "Promote pawn to: (Q, B, K, R)"
+    selection = gets.chomp
+    case selection
+    when "Q"
+      return "Queen"
+    when "B"
+      return "Bishop"
+    when "K"
+      return "Knight"
+    when "R"
+      return "Rook"
+    end
+  end
 end
