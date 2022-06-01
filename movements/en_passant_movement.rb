@@ -40,5 +40,14 @@ class En_Passant
   end
 
   def en_passant?(pawn, board)
+    #check right
+    if pawn.column + 1 <= 7 && board[pawn.column + 1][pawn.row] == @pawn_double_moved
+      return true
+      #check left
+    elsif pawn.column - 1 >= 0 && board[pawn.column - 1][pawn.row] == @pawn_double_moved
+      return true
+    else
+      return false
+    end
   end
 end
