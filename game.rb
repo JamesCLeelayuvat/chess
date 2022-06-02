@@ -9,7 +9,6 @@ class Game
     @prompts = Prompts.new
     @focus = Focus.new
     @bm = Basic_Movement.new
-    puts "test"
   end
 
   def turn_color(num)
@@ -24,15 +23,16 @@ class Game
     @board.new_board
     win = false
     turn_count = 0
-    unless win
+    while true
       @board.display_board(@board.board)
       if turn_color(turn_count) == "white"
-        @focus.white_focus = @prompts.get_focus_selection
+        @focus.white_focus = @prompts.get_focus_selection(@board.board)
       else
-        @focus.black_focus = @prompts.get_focus_selection
+        @focus.black_focus = @prompts.get_focus_selection(@board.board)
       end
       move = @prompts.get_move_to_selection
-      @bm.basic_move(move)
+      @bm.basic_move(move, turn_color(turn_count), @focus, @board.board, @board)
+      turn_count += 1
     end
   end
 end

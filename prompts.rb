@@ -38,10 +38,10 @@ class Prompts
   end
 
   #select a piece
-  def get_focus_selection
+  def get_focus_selection(board)
     puts "Select a piece:"
     selection = get_indices_from_notation(gets.chomp)
-    selection
+    board[selection[0]][selection[1]]
   end
 
   def get_promotion

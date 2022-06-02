@@ -16,11 +16,20 @@ class Checking_Movements
     row = piece.row
     valid_moves = []
     #double move
-    if piece.has_moved == false && row + 2 <= 7 && board[column][row + 1].nil?
-      valid_moves.append([column, row + 2])
-    end
-    if row + 1 <= 7 && board[column][row + 1].nil?
-      valid_moves.append([column, row + 1])
+    if piece.color == "white"
+      if piece.has_moved == false && row + 2 <= 7 && board[column][row + 1].nil? && board[column][row + 2].nil?
+        valid_moves.append([column, row + 2])
+      end
+      if row + 1 <= 7 && board[column][row + 1].nil?
+        valid_moves.append([column, row + 1])
+      end
+    else
+      if piece.has_moved == false && row - 2 >= 0 && board[column][row - 1].nil? && board[column][row - 2].nil?
+        valid_moves.append([column, row - 2])
+      end
+      if row - 1 >= 0 && board[column][row - 1].nil?
+        valid_moves.append([column, row - 1])
+      end
     end
     #check for captures
     if piece.color == "white"

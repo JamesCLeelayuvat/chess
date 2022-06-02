@@ -4,6 +4,8 @@ require_relative "./pieces/knight.rb"
 require_relative "./pieces/pawn.rb"
 require_relative "./pieces/queen.rb"
 require_relative "./pieces/rook.rb"
+require_relative "./movements/focus.rb"
+require_relative "./movements/checking_movements.rb"
 
 module Displayable
   private
@@ -75,6 +77,39 @@ module Displayable
     else
       return " "
     end
+  end
+
+  def display_board_focus(focus, color, board)
+  cm = Checking_Movements.new
+    print_top_coordinates
+    board_visual = ""
+    if color == "white"
+      focus_piece = focus.white_focus
+      valid_moves = cm.valid_moves_array(focus_piece, board.board, board)
+    else
+      focus_piece = focus.black_focus
+      valid_moves = cm.valid_moves_array(focus_piece, board.board, board)
+    end
+
+    8.times do |i|
+      k = 7 - i
+      board_visual += "\e[0;33m#{k + 1}\e[0m"
+      8.times do |j|
+        if !board[j][k].nil? && valid_moves.include? [j,k]
+          board_visual += "\e[43#{get_color_from_class(board[j][k])}m#{get_symbol_from_class(board[j][k])} \e[0m"
+        elsif board[j][k].nil? && valid_moves.include? [j,k] && (k + j) % 2 == 1
+          board_visual += "\e[47m• \e[0m"
+        elsif board[j][k].nil? && valid_moves.include? [j,k]
+          board_visual += "\e[42m• \e[0m"
+        elsif (k + j) % 2 == 1
+          board_visual += "\e[47#{get_color_from_class(board[j][k])}m#{get_symbol_from_class(board[j][k])} \e[0m"
+        else
+          board_visual += "\e[42#{get_color_from_class(board[j][k])}m#{get_symbol_from_class(board[j][k])} \e[0m"
+        end
+      end
+      board_visual += "\n"
+    end
+    puts board_visual
   end
 end
 
@@ -153,3 +188,7 @@ class Board
   end
 end
 
+board = Board.new 
+board.new_board
+focus = Focus.new
+focus.white_focus = 
