@@ -37,5 +37,8 @@ class Game
   end
 end
 
-game = Game.new
-game.start_game
+board = Board.new
+board.new_board
+focus = Focus.new
+focus.white_focus = board.board[4][1]
+board.display_board_focus(focus, "white", board)

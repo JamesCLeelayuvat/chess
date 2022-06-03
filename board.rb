@@ -8,14 +8,11 @@ require_relative "./movements/focus.rb"
 require_relative "./movements/checking_movements.rb"
 
 module Displayable
-  private
 
   #print the top coordinates
   def print_top_coordinates
     puts "\e[0;33m a b c d e f g h\e[0m"
   end
-
-  public
 
   #returns the board rendered in unicode
   def display_board(board)
@@ -80,7 +77,7 @@ module Displayable
   end
 
   def display_board_focus(focus, color, board)
-  cm = Checking_Movements.new
+    cm = Checking_Movements.new
     print_top_coordinates
     board_visual = ""
     if color == "white"
@@ -95,16 +92,16 @@ module Displayable
       k = 7 - i
       board_visual += "\e[0;33m#{k + 1}\e[0m"
       8.times do |j|
-        if !board[j][k].nil? && valid_moves.include? [j,k]
-          board_visual += "\e[43#{get_color_from_class(board[j][k])}m#{get_symbol_from_class(board[j][k])} \e[0m"
-        elsif board[j][k].nil? && valid_moves.include? [j,k] && (k + j) % 2 == 1
-          board_visual += "\e[47m• \e[0m"
-        elsif board[j][k].nil? && valid_moves.include? [j,k]
-          board_visual += "\e[42m• \e[0m"
+        if !board.board[j][k].nil? && valid_moves.include?([j, k])
+          board_visual += "\e[43#{get_color_from_class(board.board[j][k])}m#{get_symbol_from_class(board.board[j][k])} \e[0m"
+        elsif board.board[j][k].nil? && valid_moves.include?([j, k]) && (k + j) % 2 == 1
+          board_visual += "\e[47;31m\u25CF \e[0m"
+        elsif board.board[j][k].nil? && valid_moves.include?([j, k])
+          board_visual += "\e[42;31m\u25CF \e[0m"
         elsif (k + j) % 2 == 1
-          board_visual += "\e[47#{get_color_from_class(board[j][k])}m#{get_symbol_from_class(board[j][k])} \e[0m"
+          board_visual += "\e[47#{get_color_from_class(board.board[j][k])}m#{get_symbol_from_class(board.board[j][k])} \e[0m"
         else
-          board_visual += "\e[42#{get_color_from_class(board[j][k])}m#{get_symbol_from_class(board[j][k])} \e[0m"
+          board_visual += "\e[42#{get_color_from_class(board.board[j][k])}m#{get_symbol_from_class(board.board[j][k])} \e[0m"
         end
       end
       board_visual += "\n"
@@ -188,7 +185,8 @@ class Board
   end
 end
 
-board = Board.new 
-board.new_board
-focus = Focus.new
-focus.white_focus = 
+# board = Board.new
+# board.new_board
+# Focus.new
+# focus.white_focus = board.board[4][1]
+# display_board_focus(focus, "white", board.board)
