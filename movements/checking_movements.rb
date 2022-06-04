@@ -250,7 +250,7 @@ class Checking_Movements
   end
 
   #valid moves for all pieces
-  def valid_moves_array(piece, board, board_class)
+  def valid_basic_moves_array(piece, board, board_class)
     case
     when piece.instance_of?(Bishop)
       valid_moves_array_bishop(piece, board)
@@ -324,6 +324,49 @@ class Checking_Movements
       return true
     else
       return false
+    end
+  end
+
+  #not tested
+  def check?(color, board, board_class)
+    #get own pieces
+    if color == "white"
+      pieces = board_class.white_pieces
+    else
+      pieces = board_class.black_pieces
+    end
+    # find own king
+    king = pieces.select { |p| instance_of? King }[0]
+    if danger_squares(color, board, board_class).include?([king.column, king.row])
+      return true
+    end
+  end
+  #not tested
+  def all_valid_moves_array(piece, board, board_class)
+    all_valid_moves = []
+    all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
+    if piece.instance_of? Pawn
+      if en_passant_right? && piece.color == "white"
+        all_valid_moves.append[piece.column + 1, piece.row + 1]
+      elsif en_passant_right? && piece.color == "black"
+        all_valid_moves.append[piece.column + 1, piece.row - 1]
+      end
+      if en_passant_left? && piece.color == "white"
+        all_valid_moves.append[piece.column - 1, piece.row + 1]
+      elsif en_passant_left? && piece.color == "black"
+        all_valid_moves.append[piece.column - 1, piece.row - 1]
+      end
+    elsif piece.instance_of? King
+      if can_castle_left?(color, board_class) && color == "white"
+        all_valid_moves.append([2, 0])
+      elsif can_castle_left?(color, board_class) && color == "black"
+        all_valid_moves.append([2, 7])
+      end
+      if can_castle_right?(color, board_class) && color == "white"
+        all_valid_moves.append([6, 0])
+      elsif can_castle_right?(color, board_class) && color == "black"
+        all_valid_moves.append([6, 7])
+      end
     end
   end
 end
