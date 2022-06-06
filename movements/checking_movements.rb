@@ -3,11 +3,13 @@ require_relative "../board.rb"
 require_relative "../prompts.rb"
 require_relative "focus.rb"
 require_relative "../pieces/king.rb"
+require_relative "basic_movement.rb"
 
 class Checking_Movements
   include Notation_Conversion
 
   def initialize
+    @bm = Basic_Movement.new
   end
 
   #returns an array of valid pawn moves, including captures
@@ -341,6 +343,24 @@ class Checking_Movements
       return true
     end
   end
+
+  def move_gets_out_of_check?(color, move, focus, board)
+    #get focus
+    if color == "white"
+      focus_piece = focus.white_focus
+    else
+      focus_piece = focus.black_focus
+    end
+
+    #clone everything
+    board_clone = Marshal.load(Marsha.dump(board))
+
+    @bm.basic_move(move, color, focus, board_clone.board, board_clone)
+    if check?(color, board_clone.board, board_clone)
+      return false
+    end
+  end
+
   #not tested
   def all_valid_moves_array(piece, board, board_class)
     all_valid_moves = []

@@ -26,9 +26,9 @@ class Game
     while true
       @board.display_board(@board.board)
       if turn_color(turn_count) == "white"
-        @focus.white_focus = @prompts.get_focus_selection(@board.board)
+        @focus.white_focus = @prompts.get_focus_selection(turn_color, @board.board)
       else
-        @focus.black_focus = @prompts.get_focus_selection(@board.board)
+        @focus.black_focus = @prompts.get_focus_selection(turn_color @board.board)
       end
       move = @prompts.get_move_to_selection
       @bm.basic_move(move, turn_color(turn_count), @focus, @board.board, @board)
