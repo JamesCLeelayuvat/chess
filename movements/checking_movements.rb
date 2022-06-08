@@ -4,12 +4,14 @@ require_relative "../prompts.rb"
 require_relative "focus.rb"
 require_relative "../pieces/king.rb"
 require_relative "basic_movement.rb"
+require_relative "en_passant_movement.rb"
 
 class Checking_Movements
   include Notation_Conversion
 
   def initialize
     @bm = Basic_Movement.new
+    @epm = En_Passant.new
   end
 
   #returns an array of valid pawn moves, including captures
@@ -344,6 +346,7 @@ class Checking_Movements
     end
   end
 
+  #not tested
   def move_gets_out_of_check?(color, move, focus, board)
     #get focus
     if color == "white"
@@ -354,27 +357,51 @@ class Checking_Movements
 
     #clone everything
     board_clone = Marshal.load(Marsha.dump(board))
+    if move == "EPR"
+      epm.move_en_passant_right(board_clone.board[focus_piece.column][focus_piece.row], board_clone.board)
+    elsif move == "EPL"
+      epm.move_en_passant_left(board_clone.board[focus_piece.column][focus_piece], board_clone.board)
+    end
 
     @bm.basic_move(move, color, focus, board_clone.board, board_clone)
     if check?(color, board_clone.board, board_clone)
       return false
     end
+    return true
   end
 
+  #change all_valid_moves_array to take the piece from focus and color,
+  # runs it through the check? to see if the move has to get_out_of_check?
+  # it generates the basic moves array and runs each through the is_pinned?
+  # to see if it is valid
   #not tested
-  def all_valid_moves_array(piece, board, board_class)
+  #implement the pin
+
+=begin
+generate all valid moves including en passants castles (check for check)
+check for check again and if checked, go through the moves and cut out moves that return false to gets_out_of_check?
+
+=end
+
+  def all_valid_moves_array(focus, color, board, board_class)
+    if color == "white"
+      piece = focus.white_pieces
+    else
+      piece = focus.black_pieces
+    end
     all_valid_moves = []
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
+    #add in en passant moves
     if piece.instance_of? Pawn
-      if en_passant_right? && piece.color == "white"
-        all_valid_moves.append[piece.column + 1, piece.row + 1]
-      elsif en_passant_right? && piece.color == "black"
-        all_valid_moves.append[piece.column + 1, piece.row - 1]
+      if en_passant_right?
+        all_valid_moves.append["EPR"]
       end
-      if en_passant_left? && piece.color == "white"
-        all_valid_moves.append[piece.column - 1, piece.row + 1]
-      elsif en_passant_left? && piece.color == "black"
-        all_valid_moves.append[piece.column - 1, piece.row - 1]
+      if en_passant_left?
+        all_valid_moves.append["EPL"]
+      end
+      #checking for check
+      all_valid_moves.each do |move|
+        move_gets_out_of_check?(color, move, focus, board)
       end
     elsif piece.instance_of? King
       if can_castle_left?(color, board_class) && color == "white"

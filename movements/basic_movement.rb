@@ -7,7 +7,6 @@ class Basic_Movement
   include Notation_Conversion
 
   def initialize
-    @cm = Checking_Movements.new
   end
 
   #making a move
@@ -18,11 +17,12 @@ class Basic_Movement
     else
       focus_piece = focus.black_focus
     end
+    #commented due to redundant code
     #creating a valid moves array
-    valid_moves_array = @cm.valid_moves_array(focus_piece, board, board_class)
-    unless valid_moves_array.include?(move)
-      return nil
-    end
+    # valid_moves_array = @cm.valid_moves_array(focus_piece, board, board_class)
+    # unless valid_moves_array.include?(move)
+    #   return nil
+    # end
     #move is valid
     unless board[move[0]][move[1]].nil?
       board[move[0]][move[1]].captured == true

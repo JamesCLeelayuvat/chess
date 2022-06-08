@@ -8,6 +8,8 @@ class Game
     @board = Board.new
     @prompts = Prompts.new
     @focus = Focus.new
+    p "hello"
+
     @bm = Basic_Movement.new
   end
 
@@ -23,22 +25,22 @@ class Game
     @board.new_board
     win = false
     turn_count = 0
+
     while true
       @board.display_board(@board.board)
+      #focus
       if turn_color(turn_count) == "white"
         @focus.white_focus = @prompts.get_focus_selection(turn_color, @board.board)
       else
         @focus.black_focus = @prompts.get_focus_selection(turn_color @board.board)
       end
+      @board.display_board_focus(@board.board)
       move = @prompts.get_move_to_selection
       @bm.basic_move(move, turn_color(turn_count), @focus, @board.board, @board)
       turn_count += 1
     end
+    p "hello"
   end
 end
 
-board = Board.new
-board.new_board
-focus = Focus.new
-focus.white_focus = board.board[4][1]
-board.display_board_focus(focus, "white", board)
+game = Game.new
