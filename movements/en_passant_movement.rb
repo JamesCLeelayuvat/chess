@@ -5,7 +5,12 @@ class En_Passant
     @pawn_double_moved = nil
   end
 
-  def move_en_passant_left(pawn, board)
+  def move_en_passant_left(focus, color, board)
+    if color == "white"
+      pawn = focus.white_focus
+    else
+      pawn = focus.black_focus
+    end
     board[pawn.column][pawn.row] = nil
     if pawn.color == "white"
       board[pawn.column - 1][pawn.row + 1] = pawn
@@ -24,9 +29,14 @@ class En_Passant
     end
   end
 
-  def move_en_passant_right(pawn, board)
-    board[pawn.column][pawn.row] = nil
+  def move_en_passant_right(focus, color, board)
+    if color == "white"
+      pawn = focus.white_focus
+    else
+      pawn = focus.black_focus
+    end
     if pawn.color == "white"
+      board[pawn.column][pawn.row] = nil
       board[pawn.column + 1][pawn.row + 1] = pawn
       board[pawn.column + 1][pawn.row] = nil
       board[pawn.column + 1][pawn.row].captured = true
@@ -53,6 +63,22 @@ class En_Passant
   def en_passant_left?(pawn, board)
     if pawn.column - 1 >= 0 && board[pawn.column - 1][pawn.row] == @pawn_double_moved
       return true
+    end
+  end
+
+  def en_passant_to_letter_code(pawn, move, board)
+    if pawn.color == "white"
+      if board[pawn.column + 1][[pawn.row + 1]].nil?
+        return "EPR"
+      elsif board[pawn.column - 1][pawn.row + 1].nil?
+        return "EPL"
+      end
+    else
+      if board[pawn.column + 1][[pawn.row - 1]].nil?
+        return "EPR"
+      elsif board[pawn.column - 1][pawn.row - 1].nil?
+        return "EPL"
+      end
     end
   end
 end

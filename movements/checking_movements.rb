@@ -401,18 +401,16 @@ check for check again and if checked, go through the moves and cut out moves tha
       end
       #checking for check
       all_valid_moves.each do |move|
-        move_gets_out_of_check?(color, move, focus, board)
+        if !move_gets_out_of_check?(color, move, focus, board)
+          all_valid_moves.delete(move)
+        end
       end
     elsif piece.instance_of? King
-      if can_castle_left?(color, board_class) && color == "white"
-        all_valid_moves.append([2, 0])
-      elsif can_castle_left?(color, board_class) && color == "black"
-        all_valid_moves.append([2, 7])
+      if can_castle_left?(color, board_class)
+        all_valid_moves.append("CL")
       end
-      if can_castle_right?(color, board_class) && color == "white"
-        all_valid_moves.append([6, 0])
-      elsif can_castle_right?(color, board_class) && color == "black"
-        all_valid_moves.append([6, 7])
+      if can_castle_right?(color, board_class)
+        all_valid_moves.append("CR")
       end
     end
   end

@@ -33,5 +33,8 @@ class Basic_Movement
     board[focus_piece.column][focus_piece.row] = nil
     focus_piece.column = move[0]
     focus_piece.row = move[1]
+    if piece.instance_of?(Pawn) || piece.instance_of?(King) || piece.instance_of?(Rook)
+      piece.has_moved = true
+    end
   end
 end
