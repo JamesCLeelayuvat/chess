@@ -45,16 +45,19 @@ class Game
       input_invalid = true
       #checkloop
       while (input_invalid)
-        @board.display_board_focus(@focus, turn_color(turn_count), @board) #bugged
+        @board.display_board_focus(@focus, turn_color(turn_count), @board) 
         move = @prompts.get_move_to_selection(@cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board))
         #creating all_valid_moves_array
-        all_valid_moves_array = cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board)
+        all_valid_moves_array = @cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board)
         #translate move to letter code if move is special
-        if focus_piece.instance_of?(Pawn) && !@ep.en_passant_to_letter_code(focus_piece, move, @board.board).nil?
+        if focus_piece.instance_of?(Pawn) && !@ep.en_passant_to_letter_code(focus_piece, move, @board.board).nil? #bugged
           move = @ep.en_passant_to_letter_code(focus_piece, move, @board.board)
+          p "hi"
         elsif focus_piece.instance_of(King) && !@ctm.castle_to_letter_code(color, move, @board)
           move = @ctm.castle_to_letter_code(color, move, @board)
         end
+        p all_valid_moves_array
+        p move
         if all_valid_moves_array.include?(move)
           #check if move is a special move
           #if move_is_a_castle or smth

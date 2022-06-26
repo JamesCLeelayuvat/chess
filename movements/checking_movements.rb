@@ -364,7 +364,7 @@ class Checking_Movements
       @epm.move_en_passant_left(focus_clone, color, board_clone.board)
     end
 
-    @bm.basic_move(move, color, focus, board_clone.board, board_clone)
+    @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
     if check?(color, board_clone.board, board_clone)
       return false
     end
@@ -416,8 +416,11 @@ check for check again and if checked, go through the moves and cut out moves tha
     else
       piece = focus.black_focus
     end
+
     all_valid_moves = []
+
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
+
     #add in en passant moves
     if piece.instance_of? Pawn
       if @epm.en_passant_right?(piece, board)
@@ -428,7 +431,7 @@ check for check again and if checked, go through the moves and cut out moves tha
       end
       #checking for check
       all_valid_moves.each do |move|
-        if !move_gets_out_of_check?(color, move, focus, board_class)
+        if !move_gets_out_of_check?(color, move, focus, board_class) 
           all_valid_moves.delete(move)
         end
       end

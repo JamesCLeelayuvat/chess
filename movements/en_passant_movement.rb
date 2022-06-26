@@ -70,13 +70,13 @@ class En_Passant
 
   def en_passant_to_letter_code(pawn, move, board)
     if pawn.color == "white"
-      if board[pawn.column + 1][[pawn.row + 1]].nil?
+      if board[pawn.column + 1][pawn.row + 1].nil?
         return "EPR"
       elsif board[pawn.column - 1][pawn.row + 1].nil?
         return "EPL"
       end
     else
-      if board[pawn.column + 1][[pawn.row - 1]].nil?
+      if board[pawn.column + 1][pawn.row - 1].nil?
         return "EPR"
       elsif board[pawn.column - 1][pawn.row - 1].nil?
         return "EPL"
