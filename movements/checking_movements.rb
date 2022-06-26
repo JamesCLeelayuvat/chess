@@ -298,7 +298,7 @@ class Checking_Movements
             end
           end
         elsif !piece.instance_of? King
-          danger_squares += valid_moves_array(piece, board, board_class) unless valid_moves_array(piece, board, board_class).nil?
+          danger_squares += all_valid_moves_array_e(piece, board, board_class) unless all_valid_moves_array_e(piece, board, board_class).nil?
         end
       end
     end
@@ -340,14 +340,14 @@ class Checking_Movements
       pieces = board_class.black_pieces
     end
     # find own king
-    king = pieces.select { |p| instance_of? King }[0]
+    king = pieces.select { |p| p.instance_of? King }[0]
     if danger_squares(color, board, board_class).include?([king.column, king.row])
       return true
     end
   end
 
   #not tested
-  def move_gets_out_of_check?(color, move, focus, board)
+  def move_gets_out_of_check?(color, move, focus, board_class)
     #get focus
     if color == "white"
       focus_piece = focus.white_focus
@@ -356,11 +356,12 @@ class Checking_Movements
     end
 
     #clone everything
-    board_clone = Marshal.load(Marsha.dump(board))
+    board_clone = Marshal.load(Marshal.dump(board_class))
+    focus_clone = Marshal.load(Marshal.dump(focus))
     if move == "EPR"
-      epm.move_en_passant_right(board_clone.board[focus_piece.column][focus_piece.row], board_clone.board)
+      @epm.move_en_passant_right(focus_clone, color, board_clone.board)
     elsif move == "EPL"
-      epm.move_en_passant_left(board_clone.board[focus_piece.column][focus_piece], board_clone.board)
+      @epm.move_en_passant_left(focus_clone, color, board_clone.board)
     end
 
     @bm.basic_move(move, color, focus, board_clone.board, board_clone)
@@ -382,26 +383,52 @@ generate all valid moves including en passants castles (check for check)
 check for check again and if checked, go through the moves and cut out moves that return false to gets_out_of_check?
 
 =end
+  def all_valid_moves_array_e(piece, board, board_class)
+    all_valid_moves = []
+    all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
+    #add in en passant moves
+    if piece.instance_of? Pawn
+      if @epm.en_passant_right?(piece, board)
+        all_valid_moves.append["EPR"]
+      end
+      if @epm.en_passant_left?(piece, board)
+        all_valid_moves.append["EPL"]
+      end
+      #checking for check
+      all_valid_moves.each do |move|
+        if !move_gets_out_of_check?(color, move, focus, board_class)
+          all_valid_moves.delete(move)
+        end
+      end
+    elsif piece.instance_of? King
+      if can_castle_left?(color, board_class)
+        all_valid_moves.append("CL")
+      end
+      if can_castle_right?(color, board_class)
+        all_valid_moves.append("CR")
+      end
+    end
+  end
 
   def all_valid_moves_array(focus, color, board, board_class)
     if color == "white"
-      piece = focus.white_pieces
+      piece = focus.white_focus
     else
-      piece = focus.black_pieces
+      piece = focus.black_focus
     end
     all_valid_moves = []
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
     #add in en passant moves
     if piece.instance_of? Pawn
-      if en_passant_right?
-        all_valid_moves.append["EPR"]
+      if @epm.en_passant_right?(piece, board)
+        all_valid_moves.append("EPR")
       end
-      if en_passant_left?
-        all_valid_moves.append["EPL"]
+      if @epm.en_passant_left?(piece, board)
+        all_valid_moves.append("EPL")
       end
       #checking for check
       all_valid_moves.each do |move|
-        if !move_gets_out_of_check?(color, move, focus, board)
+        if !move_gets_out_of_check?(color, move, focus, board_class)
           all_valid_moves.delete(move)
         end
       end

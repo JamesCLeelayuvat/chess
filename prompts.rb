@@ -54,6 +54,7 @@ class Prompts
       #checkloop
       if !board[selection[0]][selection[1]].nil? && board[selection[0]][selection[1]].color == color
         input_invalid = false
+
         return board[selection[0]][selection[1]]
       end
       puts "Invalid selection. Please try another square."

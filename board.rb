@@ -82,10 +82,10 @@ module Displayable
     board_visual = ""
     if color == "white"
       focus_piece = focus.white_focus
-      valid_moves = cm.valid_moves_array(focus_piece, board.board, board)
+      valid_moves = cm.all_valid_moves_array(focus, color, board.board, board) #bugged
     else
       focus_piece = focus.black_focus
-      valid_moves = cm.valid_moves_array(focus_piece, board.board, board)
+      valid_moves = cm.all_valid_moves_array(focus, color, board.board, board)
     end
 
     8.times do |i|
