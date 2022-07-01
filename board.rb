@@ -87,7 +87,6 @@ module Displayable
       focus_piece = focus.black_focus
       valid_moves = cm.all_valid_moves_array(focus, color, board.board, board)
     end
-
     8.times do |i|
       k = 7 - i
       board_visual += "\e[0;33m#{k + 1}\e[0m"

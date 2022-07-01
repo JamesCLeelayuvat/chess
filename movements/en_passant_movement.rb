@@ -2,7 +2,7 @@ class En_Passant
   attr_accessor :pawn_double_moved
 
   def initialize
-    @pawn_double_moved = nil
+    @pawn_double_moved = "none"
   end
 
   def move_en_passant_left(focus, color, board)
@@ -55,9 +55,7 @@ class En_Passant
 
   def en_passant_right?(pawn, board)
     #check right
-    if pawn.column + 1 <= 7 && board[pawn.column + 1][pawn.row] == @pawn_double_moved
-      # p pawn.row
-      # p board[pawn.column] #temp
+    if pawn.color == "white" && pawn.column + 1 <= 7 && board[pawn.column + 1][pawn.row] == @pawn_double_moved
       return true
     end
   end

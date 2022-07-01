@@ -297,7 +297,7 @@ class Checking_Movements
               danger_squares.append([piece.column - 1, piece.row - 1])
             end
           end
-        elsif !piece.instance_of? King
+        else
           danger_squares += all_valid_moves_array_e(piece, board, board_class) unless all_valid_moves_array_e(piece, board, board_class).nil?
         end
       end
@@ -341,13 +341,15 @@ class Checking_Movements
     end
     # find own king
     king = pieces.select { |p| p.instance_of? King }[0]
+    p king #temp
+    p danger_squares(color, board, board_class)
     if danger_squares(color, board, board_class).include?([king.column, king.row])
       return true
     end
   end
 
   #not tested
-  def move_gets_out_of_check?(color, move, focus, board_class)
+  def move_gets_out_of_check?(color, move, focus, board_class) #bugged
     #get focus
     if color == "white"
       focus_piece = focus.white_focus
@@ -420,7 +422,6 @@ check for check again and if checked, go through the moves and cut out moves tha
     all_valid_moves = []
 
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
-
     #add in en passant moves
     if piece.instance_of? Pawn
       if @epm.en_passant_right?(piece, board)
@@ -430,11 +431,7 @@ check for check again and if checked, go through the moves and cut out moves tha
         all_valid_moves.append("EPL")
       end
       #checking for check
-      all_valid_moves.each do |move|
-        if !move_gets_out_of_check?(color, move, focus, board_class) 
-          all_valid_moves.delete(move)
-        end
-      end
+      #add in castle moves
     elsif piece.instance_of? King
       if can_castle_left?(color, board_class)
         all_valid_moves.append("CL")
@@ -443,5 +440,11 @@ check for check again and if checked, go through the moves and cut out moves tha
         all_valid_moves.append("CR")
       end
     end
+    all_valid_moves.each do |move| #wrong loop
+      if !move_gets_out_of_check?(color, move, focus, board_class)
+        all_valid_moves.delete(move)
+      end
+    end
+    all_valid_moves
   end
 end

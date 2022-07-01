@@ -31,6 +31,7 @@ class Game
 
     while true
       @board.display_board(@board.board)
+      @prompts.player_to_move(turn_count)
       #focus
       if turn_color(turn_count) == "white"
         @focus.white_focus = @prompts.get_focus_selection(turn_color(turn_count), @board.board)
@@ -45,19 +46,21 @@ class Game
       input_invalid = true
       #checkloop
       while (input_invalid)
-        @board.display_board_focus(@focus, turn_color(turn_count), @board) 
+        @board.display_board_focus(@focus, turn_color(turn_count), @board)
+        @prompts.player_to_move(turn_count)
         move = @prompts.get_move_to_selection(@cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board))
+
         #creating all_valid_moves_array
         all_valid_moves_array = @cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board)
         #translate move to letter code if move is special
-        if focus_piece.instance_of?(Pawn) && !@ep.en_passant_to_letter_code(focus_piece, move, @board.board).nil? #bugged
-          move = @ep.en_passant_to_letter_code(focus_piece, move, @board.board)
-          p "hi"
-        elsif focus_piece.instance_of(King) && !@ctm.castle_to_letter_code(color, move, @board)
-          move = @ctm.castle_to_letter_code(color, move, @board)
-        end
-        p all_valid_moves_array
-        p move
+        # if focus_piece.instance_of?(Pawn) && move[0] == focus_piece.row + 2
+        #   @ep.pawn_double_moved = focus_piece
+        # elsif focus_piece.instance_of?(Pawn) && !@ep.en_passant_to_letter_code(focus_piece, move, @board.board).nil? #bugged
+        #   move = @ep.en_passant_to_letter_code(focus_piece, move, @board.board)
+        #   @ep.pawn_double_moved = "none"
+        # elsif focus_piece.instance_of?(King) && !@ctm.castle_to_letter_code(color, move, @board)
+        #   move = @ctm.castle_to_letter_code(color, move, @board)
+        # end
         if all_valid_moves_array.include?(move)
           #check if move is a special move
           #if move_is_a_castle or smth
@@ -68,7 +71,7 @@ class Game
             elsif move == "EPL"
               @ep.move_en_passant_left(@focus, turn_color(turn_count), @board.board)
             end
-          elsif piece.instance_of? King
+          elsif focus_piece.instance_of? King
             if move == "CR"
               @ctm.castle_right(turn_color(turn_count), @board)
             elsif move == "CL"

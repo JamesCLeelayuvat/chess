@@ -36,7 +36,6 @@ class Prompts
     while input_invalid
       puts "Move to:"
       selection = get_indices_from_notation(gets.chomp)
-      selection
       #checkloop
       if valid_moves_array.include? selection
         input_invalid = false
@@ -78,6 +77,14 @@ class Prompts
         return "Rook"
       end
       puts "Invalid promotion piece. Please try again."
+    end
+  end
+
+  def player_to_move(turn_count)
+    if turn_count % 2 == 0
+      puts "White to move"
+    else
+      puts "Black to move"
     end
   end
 end

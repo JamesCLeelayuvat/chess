@@ -1,15 +1,8 @@
-class Test
-  attr_accessor :var
-  @var
-
-  def initialize
-    @var = 0
-  end
-end
-
-test = Test.new
-p test.var
-test_clone = Marshal.load(Marshal.dump(test))
-test_clone.var = 2
-p test.var
-p test_clone.var
+ # if focus_piece.instance_of?(Pawn) && move[0] == focus_piece.row + 2
+        #   @ep.pawn_double_moved = focus_piece
+        # elsif focus_piece.instance_of?(Pawn) && !@ep.en_passant_to_letter_code(focus_piece, move, @board.board).nil? #bugged
+        #   move = @ep.en_passant_to_letter_code(focus_piece, move, @board.board)
+        #   @ep.pawn_double_moved = "none"
+        # elsif focus_piece.instance_of?(King) && !@ctm.castle_to_letter_code(color, move, @board)
+        #   move = @ctm.castle_to_letter_code(color, move, @board)
+        # end
