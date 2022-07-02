@@ -216,32 +216,7 @@ class Checking_Movements
     else
       opponent_pieces_array = board_class.white_pieces
     end
-    danger_squares = []
-    opponent_pieces_array.each { |piece|
-      #append all moves by opponent to danger list
-      if !piece.nil? && piece.captured == false
-        if piece.instance_of? Pawn
-          if piece.color == "white"
-            if piece.column + 1 <= 7 && piece.row + 1 <= 7
-              danger_squares.append([piece.column + 1, piece.row + 1])
-            end
-            if piece.column - 1 >= 0 && piece.row + 1 >= 0
-              danger_squares.append([piece.column - 1, piece.row + 1])
-            end
-          else
-            if piece.column + 1 <= 7 && piece.row - 1 >= 0
-              danger_squares.append([piece.column + 1, piece.row - 1])
-            end
-            if piece.column - 1 >= 0 && piece.row - 1 >= 0
-              danger_squares.append([piece.column - 1, piece.row - 1])
-            end
-          end
-        elsif !piece.instance_of? King
-          danger_squares += valid_moves_array(piece, board, board_class) unless valid_moves_array(piece, board, board_class).nil?
-        end
-      end
-    }
-    danger_squares.uniq!
+    danger_squares = danger_squares(piece.color, board, board_class)
     #checks all squares around king, adds to array of valid moves only if the square is not dangerous and no ally pieces are on the square
     for i in -1..1
       for j in -1..1
@@ -297,6 +272,8 @@ class Checking_Movements
               danger_squares.append([piece.column - 1, piece.row - 1])
             end
           end
+        elsif piece.instance_of? King
+          #breakcase to not put king into all_valid...
         else
           danger_squares += all_valid_moves_array_e(piece, board, board_class) unless all_valid_moves_array_e(piece, board, board_class).nil?
         end
