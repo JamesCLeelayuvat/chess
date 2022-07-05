@@ -273,8 +273,18 @@ class Checking_Movements
             end
           end
         elsif piece.instance_of? King
-          #breakcase to not put king into all_valid...
+          danger_squares.append([piece.column + 1, piece.row + 1])
+          danger_squares.append([piece.column, piece.row + 1])
+          danger_squares.append([piece.column - 1, piece.row + 1])
+          danger_squares.append([piece.column + 1, piece.row])
+          danger_squares.append([piece.column - 1, piece.row])
+          danger_squares.append([piece.column + 1, piece.row - 1])
+          danger_squares.append([piece.column, piece.row - 1])
+          danger_squares.append([piece.column - 1, piece.row - 1])
+          danger_squares.select! { |move| move[0] <= 7 && move[0] >= 0 && move[1] <= 7 && move[1] >= 0 }
         else
+          p piece
+          p all_valid_moves_array_e(piece, board, board_class)
           danger_squares += all_valid_moves_array_e(piece, board, board_class) unless all_valid_moves_array_e(piece, board, board_class).nil?
         end
       end
@@ -318,8 +328,7 @@ class Checking_Movements
     end
     # find own king
     king = pieces.select { |p| p.instance_of? King }[0]
-    p king #temp
-    p danger_squares(color, board, board_class)
+
     if danger_squares(color, board, board_class).include?([king.column, king.row])
       return true
     end
@@ -362,7 +371,7 @@ generate all valid moves including en passants castles (check for check)
 check for check again and if checked, go through the moves and cut out moves that return false to gets_out_of_check?
 
 =end
-  def all_valid_moves_array_e(piece, board, board_class)
+  def all_valid_moves_array_e(piece, board, board_class) #somehow doesn't get the danger moves from special pieces
     all_valid_moves = []
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
     #add in en passant moves
