@@ -283,39 +283,11 @@ class Checking_Movements
           danger_squares.append([piece.column - 1, piece.row - 1])
           danger_squares.select! { |move| move[0] <= 7 && move[0] >= 0 && move[1] <= 7 && move[1] >= 0 }
         else
-          p piece
-          p all_valid_moves_array_e(piece, board, board_class)
-          danger_squares += all_valid_moves_array_e(piece, board, board_class) unless all_valid_moves_array_e(piece, board, board_class).nil?
+          danger_squares += all_valid_moves_array_no_check(piece, board, board_class) unless all_valid_moves_array_e(piece, board, board_class).nil?
         end
       end
     end
     danger_squares.uniq!
-  end
-
-  def is_pinned?(move, color, focus, board)
-    board_clone = Marshal.load(Marshal.dump(board.board))
-    #determine the piece to be focused on to move
-    if color == "white"
-      focus_piece = board_clone[focus.white_focus.column][focus.white_focus.row]
-    else
-      focus_piece = board_clone[focus.black_focus.column][focus.white_focus.row]
-    end
-    #moving the clone piece
-    board_clone[focus_piece.column][focus_piece.row] = nil
-    focus_piece.column = move[0]
-    focus_piece.row = move[1]
-    if color == "white"
-      king = board.white_pieces.select { |piece| piece.instance_of? King }
-    else
-      king = board.black_pieces.select { |piece| piece.instance_of? King }
-    end
-    danger_squares_array = danger_squares(color, board_clone, board)
-    king = king[0]
-    if danger_squares_array.include?([king.column, king.row])
-      return true
-    else
-      return false
-    end
   end
 
   #not tested
@@ -359,18 +331,30 @@ class Checking_Movements
     return true
   end
 
-  #change all_valid_moves_array to take the piece from focus and color,
-  # runs it through the check? to see if the move has to get_out_of_check?
-  # it generates the basic moves array and runs each through the is_pinned?
-  # to see if it is valid
-  #not tested
-  #implement the pin
+  def all_valid_moves_array_no_check(piece, board, board_class)
+    all_valid_moves = []
+    all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
+    #add in en passant moves
+    if piece.instance_of? Pawn
+      if @epm.en_passant_right?(piece, board)
+        all_valid_moves.append["EPR"]
+      end
+      if @epm.en_passant_left?(piece, board)
+        all_valid_moves.append["EPL"]
+      end
+      #bugged add moves for all other pieces
+      #checking for check
+    elsif piece.instance_of? King
+      if can_castle_left?(color, board_class)
+        all_valid_moves.append("CL")
+      end
+      if can_castle_right?(color, board_class)
+        all_valid_moves.append("CR")
+      end
+    end
+    all_valid_moves
+  end
 
-=begin
-generate all valid moves including en passants castles (check for check)
-check for check again and if checked, go through the moves and cut out moves that return false to gets_out_of_check?
-
-=end
   def all_valid_moves_array_e(piece, board, board_class) #somehow doesn't get the danger moves from special pieces
     all_valid_moves = []
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
@@ -382,7 +366,9 @@ check for check again and if checked, go through the moves and cut out moves tha
       if @epm.en_passant_left?(piece, board)
         all_valid_moves.append["EPL"]
       end
+      #bugged add moves for all other pieces
       #checking for check
+
       all_valid_moves.each do |move|
         if !move_gets_out_of_check?(color, move, focus, board_class)
           all_valid_moves.delete(move)
