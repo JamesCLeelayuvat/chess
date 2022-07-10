@@ -326,8 +326,8 @@ class Checking_Movements
     end
 
     @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
-    p move 
-    p check?(color, board_clone.board, board_clone)
+    # p move 
+    # p check?(color, board_clone.board, board_clone)
     if check?(color, board_clone.board, board_clone)
       return false
     end
@@ -373,8 +373,9 @@ class Checking_Movements
       #checking for check
 
       all_valid_moves.each do |move|
-        if !move_gets_out_of_check?(color, move, focus, board_class)
+        if !move_gets_out_of_check?(color, move, focus, board_class)#bugged
           all_valid_moves.delete(move)
+          p move
           p all_valid_moves
         end
       end
