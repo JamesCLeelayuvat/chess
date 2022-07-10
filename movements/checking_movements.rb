@@ -283,10 +283,11 @@ class Checking_Movements
           danger_squares.append([piece.column - 1, piece.row - 1])
           danger_squares.select! { |move| move[0] <= 7 && move[0] >= 0 && move[1] <= 7 && move[1] >= 0 }
         else
-          danger_squares += all_valid_moves_array_no_check(piece, board, board_class) unless all_valid_moves_array_e(piece, board, board_class).nil?
+          danger_squares += all_valid_moves_array_no_check(piece, board, board_class)
         end
       end
     end
+    danger_squares.compact!
     danger_squares.uniq!
   end
 
@@ -300,10 +301,10 @@ class Checking_Movements
     end
     # find own king
     king = pieces.select { |p| p.instance_of? King }[0]
-
     if danger_squares(color, board, board_class).include?([king.column, king.row])
       return true
     end
+    return false
   end
 
   #not tested
@@ -325,6 +326,8 @@ class Checking_Movements
     end
 
     @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
+    p move 
+    p check?(color, board_clone.board, board_clone)
     if check?(color, board_clone.board, board_clone)
       return false
     end
@@ -372,6 +375,7 @@ class Checking_Movements
       all_valid_moves.each do |move|
         if !move_gets_out_of_check?(color, move, focus, board_class)
           all_valid_moves.delete(move)
+          p all_valid_moves
         end
       end
     elsif piece.instance_of? King
