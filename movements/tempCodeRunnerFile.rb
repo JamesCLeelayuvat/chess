@@ -1,1 +1,1 @@
-cm.can_castle?("white", board)
+        # all_valid_moves.delete(move)

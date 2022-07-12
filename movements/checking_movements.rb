@@ -291,7 +291,6 @@ class Checking_Movements
     danger_squares.uniq!
   end
 
-  #not tested
   def check?(color, board, board_class)
     #get own pieces
     if color == "white"
@@ -326,8 +325,9 @@ class Checking_Movements
     end
 
     @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
-    # p move 
-    # p check?(color, board_clone.board, board_clone)
+    p focus_piece
+    p move
+    p check?(color, board_clone.board, board_clone)
     if check?(color, board_clone.board, board_clone)
       return false
     end
@@ -358,36 +358,35 @@ class Checking_Movements
     all_valid_moves
   end
 
-  def all_valid_moves_array_e(piece, board, board_class) #somehow doesn't get the danger moves from special pieces
-    all_valid_moves = []
-    all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
-    #add in en passant moves
-    if piece.instance_of? Pawn
-      if @epm.en_passant_right?(piece, board)
-        all_valid_moves.append["EPR"]
-      end
-      if @epm.en_passant_left?(piece, board)
-        all_valid_moves.append["EPL"]
-      end
-      #bugged add moves for all other pieces
-      #checking for check
+  # def all_valid_moves_array_e(piece, board, board_class)
+  #   all_valid_moves = []
+  #   all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
+  #   #add in en passant moves
+  #   if piece.instance_of? Pawn
+  #     if @epm.en_passant_right?(piece, board)
+  #       all_valid_moves.append["EPR"]
+  #     end
+  #     if @epm.en_passant_left?(piece, board)
+  #       all_valid_moves.append["EPL"]
+  #     end
+  #     #bugged add moves for all other pieces
+  #     #checking for check
+  #     focus = Focus.new
 
-      all_valid_moves.each do |move|
-        if !move_gets_out_of_check?(color, move, focus, board_class)#bugged
-          all_valid_moves.delete(move)
-          p move
-          p all_valid_moves
-        end
-      end
-    elsif piece.instance_of? King
-      if can_castle_left?(color, board_class)
-        all_valid_moves.append("CL")
-      end
-      if can_castle_right?(color, board_class)
-        all_valid_moves.append("CR")
-      end
-    end
-  end
+  #     all_valid_moves.each do |move|
+  #       if !move_gets_out_of_check?(color, move, focus, board_class) #bugged
+  #         all_valid_moves.delete(move)
+  #       end
+  #     end
+  #   elsif piece.instance_of? King
+  #     if can_castle_left?(color, board_class)
+  #       all_valid_moves.append("CL")
+  #     end
+  #     if can_castle_right?(color, board_class)
+  #       all_valid_moves.append("CR")
+  #     end
+  #   end
+  # end
 
   def all_valid_moves_array(focus, color, board, board_class)
     if color == "white"
@@ -417,10 +416,13 @@ class Checking_Movements
         all_valid_moves.append("CR")
       end
     end
+    delete_moves = []
     all_valid_moves.each do |move| #wrong loop
+      p move
       if !move_gets_out_of_check?(color, move, focus, board_class)
-        all_valid_moves.delete(move)
+        delete_moves.append(move)
       end
+      all_valid_moves = all_valid_moves - delete_moves
     end
     all_valid_moves
   end
