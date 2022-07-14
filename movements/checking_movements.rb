@@ -299,6 +299,8 @@ class Checking_Movements
       pieces = board_class.black_pieces
     end
     # find own king
+    board_class.display_board(board)
+    p board[3][1]
     king = pieces.select { |p| p.instance_of? King }[0]
     if danger_squares(color, board, board_class).include?([king.column, king.row])
       return true
@@ -323,9 +325,10 @@ class Checking_Movements
     elsif move == "EPL"
       @epm.move_en_passant_left(focus_clone, color, board_clone.board)
     end
-
+    examine = board_clone.board[3][1]
+    p examine
     @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
-    p focus_piece
+    p examine
     p move
     p check?(color, board_clone.board, board_clone)
     if check?(color, board_clone.board, board_clone)
@@ -358,36 +361,6 @@ class Checking_Movements
     all_valid_moves
   end
 
-  # def all_valid_moves_array_e(piece, board, board_class)
-  #   all_valid_moves = []
-  #   all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
-  #   #add in en passant moves
-  #   if piece.instance_of? Pawn
-  #     if @epm.en_passant_right?(piece, board)
-  #       all_valid_moves.append["EPR"]
-  #     end
-  #     if @epm.en_passant_left?(piece, board)
-  #       all_valid_moves.append["EPL"]
-  #     end
-  #     #bugged add moves for all other pieces
-  #     #checking for check
-  #     focus = Focus.new
-
-  #     all_valid_moves.each do |move|
-  #       if !move_gets_out_of_check?(color, move, focus, board_class) #bugged
-  #         all_valid_moves.delete(move)
-  #       end
-  #     end
-  #   elsif piece.instance_of? King
-  #     if can_castle_left?(color, board_class)
-  #       all_valid_moves.append("CL")
-  #     end
-  #     if can_castle_right?(color, board_class)
-  #       all_valid_moves.append("CR")
-  #     end
-  #   end
-  # end
-
   def all_valid_moves_array(focus, color, board, board_class)
     if color == "white"
       piece = focus.white_focus
@@ -418,7 +391,6 @@ class Checking_Movements
     end
     delete_moves = []
     all_valid_moves.each do |move| #wrong loop
-      p move
       if !move_gets_out_of_check?(color, move, focus, board_class)
         delete_moves.append(move)
       end

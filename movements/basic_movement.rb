@@ -25,7 +25,10 @@ class Basic_Movement
     # end
     #move is valid
     unless board[move[0]][move[1]].nil?
-      board[move[0]][move[1]].captured == true
+      p "hello"
+      p board[move[0]][move[1]]
+      board[move[0]][move[1]].captured = true
+      p board[move[0]][move[1]]
       board[move[0]][move[1]] = nil
     end
     #move the piece
