@@ -299,8 +299,6 @@ class Checking_Movements
       pieces = board_class.black_pieces
     end
     # find own king
-    board_class.display_board(board)
-    p board[3][1]
     king = pieces.select { |p| p.instance_of? King }[0]
     if danger_squares(color, board, board_class).include?([king.column, king.row])
       return true
@@ -326,11 +324,7 @@ class Checking_Movements
       @epm.move_en_passant_left(focus_clone, color, board_clone.board)
     end
     examine = board_clone.board[3][1]
-    p examine
     @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
-    p examine
-    p move
-    p check?(color, board_clone.board, board_clone)
     if check?(color, board_clone.board, board_clone)
       return false
     end
@@ -373,6 +367,7 @@ class Checking_Movements
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
     #add in en passant moves
     if piece.instance_of? Pawn
+      p @epm.pawn_double_moved
       if @epm.en_passant_right?(piece, board)
         all_valid_moves.append("EPR")
       end

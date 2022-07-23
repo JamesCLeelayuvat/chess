@@ -81,4 +81,12 @@ class En_Passant
       end
     end
   end
+
+  def double_move(focus, color, move)
+    if color == "white"
+      piece = focus.white_focus
+    else
+      piece = focus.black_focus
+    end
+  end
 end

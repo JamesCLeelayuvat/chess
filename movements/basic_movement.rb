@@ -25,14 +25,13 @@ class Basic_Movement
     # end
     #move is valid
     unless board[move[0]][move[1]].nil?
-      p "hello"
       p board[move[0]][move[1]]
       board[move[0]][move[1]].captured = true
       p board[move[0]][move[1]]
       board[move[0]][move[1]] = nil
     end
     #move the piece
-    board[move[0]][move[1]] = focus_piece
+    board[move[0]][move[1]] = focus_piece #have the en passsant obj record the double moved pawn
     board[focus_piece.column][focus_piece.row] = nil
     focus_piece.column = move[0]
     focus_piece.row = move[1]
