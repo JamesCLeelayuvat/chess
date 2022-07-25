@@ -11,7 +11,7 @@ class Checking_Movements
 
   def initialize
     @bm = Basic_Movement.new
-    @epm = En_Passant.new
+    epm = En_Passant.new
   end
 
   #returns an array of valid pawn moves, including captures
@@ -319,9 +319,9 @@ class Checking_Movements
     board_clone = Marshal.load(Marshal.dump(board_class))
     focus_clone = Marshal.load(Marshal.dump(focus))
     if move == "EPR"
-      @epm.move_en_passant_right(focus_clone, color, board_clone.board)
+      epm.move_en_passant_right(focus_clone, color, board_clone.board)
     elsif move == "EPL"
-      @epm.move_en_passant_left(focus_clone, color, board_clone.board)
+      epm.move_en_passant_left(focus_clone, color, board_clone.board)
     end
     examine = board_clone.board[3][1]
     @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
@@ -336,10 +336,10 @@ class Checking_Movements
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
     #add in en passant moves
     if piece.instance_of? Pawn
-      if @epm.en_passant_right?(piece, board)
+      if epm.en_passant_right?(piece, board)
         all_valid_moves.append["EPR"]
       end
-      if @epm.en_passant_left?(piece, board)
+      if epm.en_passant_left?(piece, board)
         all_valid_moves.append["EPL"]
       end
       #bugged add moves for all other pieces
@@ -355,7 +355,7 @@ class Checking_Movements
     all_valid_moves
   end
 
-  def all_valid_moves_array(focus, color, board, board_class)
+  def all_valid_moves_array(focus, color, board, board_class, epm)
     if color == "white"
       piece = focus.white_focus
     else
@@ -367,11 +367,10 @@ class Checking_Movements
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
     #add in en passant moves
     if piece.instance_of? Pawn
-      p @epm.pawn_double_moved
-      if @epm.en_passant_right?(piece, board)
+      if epm.en_passant_right?(piece, board)
         all_valid_moves.append("EPR")
       end
-      if @epm.en_passant_left?(piece, board)
+      if epm.en_passant_left?(piece, board)
         all_valid_moves.append("EPL")
       end
       #checking for check

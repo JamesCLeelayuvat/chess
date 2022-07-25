@@ -76,16 +76,16 @@ module Displayable
     end
   end
 
-  def display_board_focus(focus, color, board)
+  def display_board_focus(focus, color, board, ep)
     cm = Checking_Movements.new
     print_top_coordinates
     board_visual = ""
     if color == "white"
       focus_piece = focus.white_focus
-      valid_moves = cm.all_valid_moves_array(focus, color, board.board, board) #bugged
+      valid_moves = cm.all_valid_moves_array(focus, color, board.board, board, ep) 
     else
       focus_piece = focus.black_focus
-      valid_moves = cm.all_valid_moves_array(focus, color, board.board, board)
+      valid_moves = cm.all_valid_moves_array(focus, color, board.board, board, ep)
     end
     8.times do |i|
       k = 7 - i

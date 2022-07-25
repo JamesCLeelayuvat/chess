@@ -89,4 +89,16 @@ class En_Passant
       piece = focus.black_focus
     end
   end
+
+  def check_set_double_moved(piece, move)
+    if piece.instance_of?(Pawn) 
+      if piece.color == "white" && move[1] == piece.row + 2
+      @pawn_double_moved = piece
+      elsif piece.color == "black" && move[1] == piece.row - 2
+      @pawn_double_moved = piece
+      end
+    else 
+      # @pawn_double_moved = "none"
+    end
+  end
 end

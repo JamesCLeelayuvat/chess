@@ -13,6 +13,7 @@ class Game
     @cm = Checking_Movements.new
     @bm = Basic_Movement.new
     @ep = En_Passant.new
+    @ep.pawn_double_moved = "none"
   end
 
   def turn_color(num)
@@ -46,13 +47,12 @@ class Game
       input_invalid = true
       #checkloop
       while (input_invalid)
-        @board.display_board_focus(@focus, turn_color(turn_count), @board)
+        @board.display_board_focus(@focus, turn_color(turn_count), @board, @ep)
         @prompts.player_to_move(turn_count)
-        move = @prompts.get_move_to_selection(@cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board))
+        move = @prompts.get_move_to_selection(@cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board, @ep))
 
         #creating all_valid_moves_array
-        all_valid_moves_array = @cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board)
-        p all_valid_moves_array
+        all_valid_moves_array = @cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board, @ep)
         if all_valid_moves_array.include?(move)
           #check if move is a special move
           #if move_is_a_castle or smth
@@ -72,6 +72,7 @@ class Game
           end
         end
       end
+      @ep.check_set_double_moved(focus_piece, move)
       @bm.basic_move(move, turn_color(turn_count), @focus, @board.board, @board)
       turn_count += 1
     end

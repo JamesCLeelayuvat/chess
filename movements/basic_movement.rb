@@ -7,6 +7,7 @@ class Basic_Movement
   include Notation_Conversion
 
   def initialize
+  @epm = En_Passant.new
   end
 
   #making a move
@@ -25,11 +26,10 @@ class Basic_Movement
     # end
     #move is valid
     unless board[move[0]][move[1]].nil?
-      p board[move[0]][move[1]]
       board[move[0]][move[1]].captured = true
-      p board[move[0]][move[1]]
       board[move[0]][move[1]] = nil
     end
+    
     #move the piece
     board[move[0]][move[1]] = focus_piece #have the en passsant obj record the double moved pawn
     board[focus_piece.column][focus_piece.row] = nil
