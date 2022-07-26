@@ -11,7 +11,7 @@ class Checking_Movements
 
   def initialize
     @bm = Basic_Movement.new
-    epm = En_Passant.new
+    @epm = En_Passant.new
   end
 
   #returns an array of valid pawn moves, including captures
@@ -283,7 +283,7 @@ class Checking_Movements
           danger_squares.append([piece.column - 1, piece.row - 1])
           danger_squares.select! { |move| move[0] <= 7 && move[0] >= 0 && move[1] <= 7 && move[1] >= 0 }
         else
-          danger_squares += all_valid_moves_array_no_check(piece, board, board_class)
+          danger_squares += all_valid_moves_array_no_check_no_ep(piece, board, board_class)
         end
       end
     end
@@ -318,40 +318,23 @@ class Checking_Movements
     #clone everything
     board_clone = Marshal.load(Marshal.dump(board_class))
     focus_clone = Marshal.load(Marshal.dump(focus))
+    p move
     if move == "EPR"
-      epm.move_en_passant_right(focus_clone, color, board_clone.board)
+      @epm.move_en_passant_right(focus_clone, color, board_clone.board)
     elsif move == "EPL"
-      epm.move_en_passant_left(focus_clone, color, board_clone.board)
+      @epm.move_en_passant_left(focus_clone, color, board_clone.board)
+    else
+      @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
     end
-    examine = board_clone.board[3][1]
-    @bm.basic_move(move, color, focus_clone, board_clone.board, board_clone)
     if check?(color, board_clone.board, board_clone)
       return false
     end
     return true
   end
 
-  def all_valid_moves_array_no_check(piece, board, board_class)
+  def all_valid_moves_array_no_check_no_ep(piece, board, board_class)
     all_valid_moves = []
     all_valid_moves = all_valid_moves + valid_basic_moves_array(piece, board, board_class)
-    #add in en passant moves
-    if piece.instance_of? Pawn
-      if epm.en_passant_right?(piece, board)
-        all_valid_moves.append["EPR"]
-      end
-      if epm.en_passant_left?(piece, board)
-        all_valid_moves.append["EPL"]
-      end
-      #bugged add moves for all other pieces
-      #checking for check
-    elsif piece.instance_of? King
-      if can_castle_left?(color, board_class)
-        all_valid_moves.append("CL")
-      end
-      if can_castle_right?(color, board_class)
-        all_valid_moves.append("CR")
-      end
-    end
     all_valid_moves
   end
 

@@ -53,6 +53,7 @@ class Game
 
         #creating all_valid_moves_array
         all_valid_moves_array = @cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board, @ep)
+        p all_valid_moves_array
         if all_valid_moves_array.include?(move)
           #check if move is a special move
           #if move_is_a_castle or smth
