@@ -318,7 +318,6 @@ class Checking_Movements
     #clone everything
     board_clone = Marshal.load(Marshal.dump(board_class))
     focus_clone = Marshal.load(Marshal.dump(focus))
-    p move
     if move == "EPR"
       @epm.move_en_passant_right(focus_clone, color, board_clone.board)
     elsif move == "EPL"

@@ -31,11 +31,24 @@ class Prompts
   end
 
   #unfinished
-  def get_move_to_selection(valid_moves_array)
+  def get_move_to_selection(valid_moves_array, piece, board)
     input_invalid = true
     while input_invalid
       puts "Move to:"
       selection = get_indices_from_notation(gets.chomp)
+      if piece.color == "white"
+        if piece.column + 1 <= 7 && board[piece.column + 1][piece.row + 1] == nil && selection == [piece.column + 1, piece.row + 1]
+          selection = "EPR"
+        elsif piece.column - 1 >= 0 && board[piece.column - 1][piece.row + 1] == nil && selection == [piece.column - 1, piece.row + 1]
+          selection = "EPL"
+        end
+      else
+        if piece.column + 1 <= 7 && board[piece.column + 1][piece.row - 1] == nil && selection == [piece.column + 1, piece.row - 1]
+          selection = "EPR"
+        elsif piece.column - 1 >= 0 && board[piece.column - 1][piece.row - 1] == nil && selection == [piece.column - 1, piece.row - 1]
+          selection = "EPL"
+        end
+      end
       #checkloop
       if valid_moves_array.include? selection
         input_invalid = false

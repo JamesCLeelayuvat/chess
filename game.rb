@@ -46,11 +46,11 @@ class Game
       #how to translate en passant to the letter code
       input_invalid = true
       #checkloop
+
       while (input_invalid)
         @board.display_board_focus(@focus, turn_color(turn_count), @board, @ep)
         @prompts.player_to_move(turn_count)
-        move = @prompts.get_move_to_selection(@cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board, @ep))
-
+        move = @prompts.get_move_to_selection(@cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board, @ep), focus_piece, @board.board)
         #creating all_valid_moves_array
         all_valid_moves_array = @cm.all_valid_moves_array(@focus, turn_color(turn_count), @board.board, @board, @ep)
         p all_valid_moves_array
@@ -60,6 +60,7 @@ class Game
           input_invalid = false
           if focus_piece.instance_of? Pawn
             if move == "EPR"
+              p "hello"
               @ep.move_en_passant_right(@focus, turn_color(turn_count), @board.board)
             elsif move == "EPL"
               @ep.move_en_passant_left(@focus, turn_color(turn_count), @board.board)
@@ -71,10 +72,13 @@ class Game
               @ctm.castle_left(turn_color(turn_count), @board)
             end
           end
+          @ep.check_set_double_moved(focus_piece, move)
+          if move.instance_of? Array
+            @bm.basic_move(move, turn_color(turn_count), @focus, @board.board, @board)
+          end
         end
       end
-      @ep.check_set_double_moved(focus_piece, move)
-      @bm.basic_move(move, turn_color(turn_count), @focus, @board.board, @board)
+
       turn_count += 1
     end
   end
